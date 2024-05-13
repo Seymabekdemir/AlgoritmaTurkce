@@ -1,0 +1,29 @@
+public class MonkeySort {
+
+    public static void main(String[] args) {
+        int[] array = {5, 2, 4, 1, 3}; // Dizide yer alan sayılar
+        monkeySort(array); // Monkey sort algoritmasını çalıştır
+        System.out.println("Sıralanmış Dizi: " + Arrays.toString(array)); // Sıralanmış diziyi yazdır
+    }
+
+    private static void monkeySort(int[] array) {
+        while (!isSorted(array)) {
+            int randomIndex1 = (int) (Math.random() * array.length); // Rastgele bir indeks seç
+            int randomIndex2 = (int) (Math.random() * array.length); // Farklı bir rastgele indeks seç
+
+            // İki seçilen öğeyi yer değiştir
+            int temp = array[randomIndex1];
+            array[randomIndex1] = array[randomIndex2];
+            array[randomIndex2] = temp;
+        }
+    }
+
+    private static boolean isSorted(int[] array) {
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < array[i - 1]) {
+                return false; // Dizi sıralanmamışsa false döndür
+            }
+        }
+        return true; // Dizi sıralanmışsa true döndür
+    }
+}
