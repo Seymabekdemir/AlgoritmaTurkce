@@ -1,0 +1,101 @@
+//bir köy yolunda kayboldunuz ve çıkışı arıyorsunuz
+//kullanmamız gereken algoritma BFS algoritmasıdır.bir çıkış yolu varsa en etkili algoritma BFS dir.
+//genişlik öncelikli arama 
+import java.util.*;
+
+public class KoylYoluCikisi {
+
+    static class Node {
+        int x;
+        int y;
+
+        public Node(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    static boolean[][] isVisited;
+    static int[][] map;
+    static int goalX;
+    static int goalY;
+
+    public static void main(String[] args) {
+        // Yol haritasını oluşturun (1 = yol, 0 = engel, G = hedef)
+        map = new int[][]{
+                {0, 0, 0, 0, 0},
+                {0, 1, 1, 1, 0},
+                {0, 0, 0, 1, 0},
+                {0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 'G'}
+        };
+
+        // Başlangıç ve hedef konumlarını belirleyin
+        int startX = 1;
+        int startY = 1;
+        goalX = 4;
+        goalY = 4;
+
+        // Ziyaretedilegilip ziyaret edilemeyeceğini takip edin
+        isVisited = new boolean[map.length][map[0].length];
+
+        // BFS algoritmasını çalıştırın
+        boolean foundExit = findExit(startX, startY);
+
+        // Çıkış yolu bulup bulamadığınızı kontrol edin
+        if (foundExit) {
+            System.out.println("Çıkış yolu bulundu!");
+        } else {
+            System.out.println("Çıkış yolu bulunamadı.");
+        }
+    }
+
+    static boolean findExit(int x, int y) {
+        // Ziyaretedilegilip ziyaret edilemeyeceğini işaretleyin
+        isVisited[x][y] = true;
+
+        // Hedefe ulaşıp ulaşmadığınızı kontrol edin
+        if (map[x][y] == 'G') {
+            return true;
+        }
+
+        // Tüm komşu hücreleri bir kuyruğa ekleyin
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(new Node(x, y));
+
+        while (!queue.isEmpty()) {
+            Node currentNode = queue.poll(); // Sıradaki hücreyi alın
+            int currentX = currentNode.x;
+            int currentY = currentNode.y;
+
+            // Tüm komşu hücreleri kontrol edin
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    if (dx == 0 && dy == 0) continue;
+
+                    int newX = currentX + dx;
+                    int newY = currentY + dy;
+
+                    // Harita sınırları dışındaysa veya engel ise atlayın
+                    if (newX < 0 || newX >= map.length || newY < 0 || newY >= map[0].length || map[newX][newY] == 0) {
+                        continue;
+                    }
+
+                    // Ziyaretedilegilip ziyaret edilemeyeceğini kontrol edin
+                    if (!isVisited[newX][newY]) {
+                        isVisited[newX][newY] = true; // Ziyaretedilegilip ziyaret edilemeyeceğini işaretleyin
+                        queue.add(new Node(newX, newY)); // Komşu hücreyi kuyruğa ekleyin
+
+                        // Hedefe ulaşıp ulaşmadığınızı kontrol edin
+                        if (map[newX][newY] == 'G') {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Çıkış yolu bulunamadı
+        return false;
+    }
+}
